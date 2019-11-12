@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'rest_framework',
     
-    #My applications
+    # My applications
     'apiv1.apps.Apiv1Config',
     'roadmap.apps.RoadmapConfig',
 ]
@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'roadmap_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'roadmap-user',
         'USER': 'postgres',
         'PASSWORD': 'test',

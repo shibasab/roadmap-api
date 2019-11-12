@@ -4,7 +4,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register('roadmap', views.RoadmapViewSet)
+router.register('roadmaps', views.RoadmapViewSet)
 
 app_name = 'apiv1'
 urlpatterns = [

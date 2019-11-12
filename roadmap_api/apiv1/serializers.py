@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..roadmap.models import Roadmap
+from roadmap.models import Roadmap
 
 
 class RoadmapSerializer(serializers.ModelSerializer):
