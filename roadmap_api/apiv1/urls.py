@@ -1,12 +1,10 @@
 from django.urls import path, include
-from rest_framework import routers
 
 from . import views
 
-router = routers.DefaultRouter()
-router.register('roadmaps', views.RoadmapViewSet)
 
 app_name = 'apiv1'
 urlpatterns = [
-    path('', include(router.urls)),
+    path('roadmaps/', views.RoadmapListCreate.as_view(), name='api-roadmap-list'),
+    path('roadmaps/<uuid:pk>', views.RoadmapDetails.as_view(), name='api-roadmap-details'),
 ]

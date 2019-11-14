@@ -8,4 +8,3 @@ class RoadmapSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roadmap
         fields = ['id', 'title', 'detail', 'next_id']
-
