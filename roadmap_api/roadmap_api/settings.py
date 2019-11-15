@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     # 3rd party apps
     'rest_framework',
+    'corsheaders',
     
     # My applications
     'apiv1.apps.Apiv1Config',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'roadmap_api.urls'
@@ -142,3 +144,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
 }
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+)
+
