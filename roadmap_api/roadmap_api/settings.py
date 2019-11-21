@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'roadmap_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'roadmap-user',
+        'NAME': 'roadmap',
         'USER': 'postgres',
         'PASSWORD': 'test',
         'HOST': '127.0.0.1',
