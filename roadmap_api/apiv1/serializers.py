@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from roadmap.models import Roadmap, RoadmapParent
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
 class RoadmapSerializer(serializers.ModelSerializer):
@@ -14,14 +15,17 @@ class RoadmapSerializer(serializers.ModelSerializer):
         }
 
 
-class RoadmapParentSerializer(serializers.ModelSerializer):
+class RoadmapParentSerializer(WritableNestedModelSerializer):
     roadmap = RoadmapSerializer(many=True)
     
     class Meta:
         model = RoadmapParent
-        fields = ['id', 'title', 'overview', 'like', 'roadmap']
+        fields = ['id', 'title', 'overview', 'like', 'created_at', 'roadmap']
         extra_kwargs = {
             'id': {
+                'read_only': True,
+            },
+            'created_at': {
                 'read_only': True,
             }
         }
@@ -37,9 +41,12 @@ class RoadmapParentSerializer(serializers.ModelSerializer):
 class RoadmapParentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoadmapParent
-        fields = ['id', 'title', 'overview', 'like']
+        fields = ['id', 'title', 'overview', 'like', 'created_at']
         extra_kwargs = {
             'id': {
+                'read_only': True,
+            },
+            'created_at': {
                 'read_only': True,
             }
         }

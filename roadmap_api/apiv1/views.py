@@ -40,6 +40,7 @@ class RoadmapDetail(APIView):
         return Response(serializer.data)
     
     def put(self, request, pk, format=None):
+        """roadmapのidを必ず指定する"""
         roadmap = self.get_object(pk)
         serializer = RoadmapParentSerializer(roadmap, data=request.data)
         if serializer.is_valid():
