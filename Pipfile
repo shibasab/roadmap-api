@@ -15,6 +15,7 @@ gunicorn = "*"
 dj-database-url = "==0.5.0"
 django-heroku = "*"
 whitenoise = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
