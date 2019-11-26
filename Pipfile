@@ -11,6 +11,7 @@ djangorestframework = "*"
 psycopg2 = "*"
 django-cors-headers = "*"
 drf-writable-nested = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
