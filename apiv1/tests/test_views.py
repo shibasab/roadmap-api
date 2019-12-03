@@ -54,3 +54,94 @@ class TestRoadmapParentView(APITestCase):
             } for i in range(len(roadmaps))]
         }
         self.assertJSONEqual(response.content, expected_json_dict)
+    
+    def test_create_with_no_title(self):
+        """
+        RoadmapParentモデルの登録APIへのPOSTリクエスト
+        (タイトルなしでバリデーションNG)
+        """
+        
+        # APIリクエストを実行
+        params = {
+            "title": "",
+            "overview": "test",
+            "roadmap": [
+                {
+                    "title": "aaa",
+                    "detail": "teeest",
+                    "next_id": "e1e5842c-f2bb-48bf-ac67-886104783910"
+                },
+                {
+                    "title": "teeeest",
+                    "detail": "teeest",
+                    "next_id": "e1e5842c-f2bb-48bf-ac67-886104783910"
+                }
+            ]
+        }
+        response = self.client.post(self.TARGET_URL, params, format='json')
+        
+        # データベースの状態を検証
+        self.assertEqual(RoadmapParent.objects.count(), 0)
+        # レスポンスの内容を検証
+        self.assertEqual(response.status_code, 400)
+        
+    def test_create_with_no_overview(self):
+        """
+        RoadmapParentモデルの登録APIへのPOSTリクエスト
+        (概要なしでバリデーションNG)
+        """
+    
+        # APIリクエストを実行
+        params = {
+            "title": "aaa",
+            "overview": "",
+            "roadmap": [
+                {
+                    "title": "aaa",
+                    "detail": "teeest",
+                    "next_id": "e1e5842c-f2bb-48bf-ac67-886104783910"
+                },
+                {
+                    "title": "teeeest",
+                    "detail": "teeest",
+                    "next_id": "e1e5842c-f2bb-48bf-ac67-886104783910"
+                }
+            ]
+        }
+        response = self.client.post(self.TARGET_URL, params, format='json')
+    
+        # データベースの状態を検証
+        self.assertEqual(RoadmapParent.objects.count(), 0)
+        # レスポンスの内容を検証
+        self.assertEqual(response.status_code, 400)
+
+    def test_create_with_id(self):
+        """
+        RoadmapParentモデルの登録APIへのPOSTリクエスト
+        (idがあるためバリデーションNG)
+        """
+    
+        # APIリクエストを実行
+        params = {
+            "id": "e1e5842c-f2bb-48bf-ac67-886104783910",
+            "title": "aaa",
+            "overview": "",
+            "roadmap": [
+                {
+                    "title": "aaa",
+                    "detail": "teeest",
+                    "next_id": "e1e5842c-f2bb-48bf-ac67-886104783910"
+                },
+                {
+                    "title": "teeeest",
+                    "detail": "teeest",
+                    "next_id": "e1e5842c-f2bb-48bf-ac67-886104783910"
+                }
+            ]
+        }
+        response = self.client.post(self.TARGET_URL, params, format='json')
+    
+        # データベースの状態を検証
+        self.assertEqual(RoadmapParent.objects.count(), 0)
+        # レスポンスの内容を検証
+        self.assertEqual(response.status_code, 400)
