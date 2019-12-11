@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import dj_database_url
 
+from datetime import timedelta
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,11 +41,14 @@ INSTALLED_APPS = [
     
     # 3rd party apps
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
+    'knox',
     
     # My applications
     'apiv1.apps.Apiv1Config',
     'roadmap.apps.RoadmapConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +62,14 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASS': (
+        "knox.auth.TokenAuthentication",
+    )
+}
+
 
 ROOT_URLCONF = 'roadmap_api.urls'
 
@@ -77,8 +90,6 @@ TEMPLATES = [
 ]
 
 # Authentication
-LOGIN_REDIRECT_URL = '/roadmaps'
-LOGOUT_REDIRECT_URL = 'rest_framework:login'
 
 
 WSGI_APPLICATION = 'roadmap_api.wsgi.application'
