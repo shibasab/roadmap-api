@@ -16,6 +16,10 @@ dj-database-url = "==0.5.0"
 django-heroku = "*"
 whitenoise = "*"
 requests = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
+djangorestframework-jwt = "*"
+django-rest-knox = "*"
 
 [requires]
 python_version = "3.7"
