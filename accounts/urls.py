@@ -1,10 +1,12 @@
 from django.urls import path, include
+from .views import RegisterAPIView, LoginAPIView, UserAPIView
+from knox import views as knox_views
 
-from . import views
-
-
-app_name = 'apiv1'
+app_name = 'accounts'
 urlpatterns = [
-    path('roadmaps/', views.RoadmapParentView.as_view(), name='api-roadmap-list'),
-    path('roadmaps/<uuid:pk>', views.RoadmapDetail.as_view(), name='api-roadmap-details'),
+    path("auth", include("knox.urls")),
+    path("auth/register", RegisterAPIView.as_view()),
+    path("auth/login", LoginAPIView.as_view()),
+    path("auth/user", UserAPIView.as_view()),
+    path("auth/logout", knox_views.LogoutView.as_view(), name="knox_logout"),
 ]
