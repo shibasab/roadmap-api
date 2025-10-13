@@ -1,28 +1,24 @@
-# API 一覧
+# API リファレンス（OpenAPI）
 
-このプロジェクトの公開API、エンドポイント、シリアライザ、モデルの概要と各モジュール詳細へのリンクを示します。
+このプロジェクトの API は OpenAPI で提供されます。以下からブラウザ UI または機械可読形式で参照できます。
 
-## エンドポイント構成
+## 参照リンク
 
-- ルート: `/api/v1/` → `apiv1`
-- ルート: `/api/accounts/` → `accounts`
+- Swagger UI: `/swagger/`
+- Redoc: `/redoc/`
+- OpenAPI JSON/YAML: `/openapi.json`, `/openapi.yaml`
 
-## クイックリンク
+## ローカルでの利用
 
-- [apiv1 の詳細](api/apiv1.md)
-- [accounts の詳細](api/accounts.md)
+```bash
+python manage.py runserver
+# ブラウザで http://localhost:8000/swagger/ にアクセス
+```
 
-## 起動と利用例
+## 認証
 
-- 開発サーバ起動:
-  ```bash
-  python manage.py runserver
-  ```
-- 認証（Knox）
-  - ヘッダ: `Authorization: Token <token>`
-  - 発行: `/api/accounts/auth/register` または `/api/accounts/auth/login`
+- Knox トークンを使用します。ヘッダに `Authorization: Token <token>` を付与してください。
 
-## スキーマ/型について
+## 静的スキーマ
 
-- `apiv1.serializers.RoadmapParentSerializer` は `roadmap` 配列のネスト作成をサポートします
-- `accounts` は Django 標準 `User` を使用します
+- リポジトリには `docs/openapi.yaml` も同梱しています。

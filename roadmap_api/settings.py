@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'knox',
+    'drf_yasg',
     
     # My applications
     'apiv1.apps.Apiv1Config',
@@ -164,6 +165,19 @@ CORS_ORIGIN_WHITELIST = (
         'http://localhost:3000',
         'http://127.0.0.1:3000',
 )
+
+# OpenAPI/Swagger settings for drf-yasg
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Knox token: "Token <token>"',
+        }
+    },
+}
 
 try:
     from .local_settings import *

@@ -1,0 +1,291 @@
+openapi: 3.0.0
+info:
+  title: Roadmap API
+  version: "1.0.0"
+  description: |
+    OpenAPI schema for the Roadmap application and Accounts (auth) APIs.
+    Authentication uses Knox Token. Send header: `Authorization: Token <token>`.
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Knox token. Example - `Authorization: Token <token>`
+  schemas:
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: alice
+        is_superuser:
+          type: boolean
+          example: false
+      required: [id, username, is_superuser]
+    AuthTokenResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+          example: 1f3c1a... (redacted)
+      required: [user, token]
+    Roadmap:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 50
+        detail:
+          type: string
+          maxLength: 200
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        next_id:
+          type: string
+          format: uuid
+          nullable: true
+      required: [title]
+    RoadmapParentList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 50
+        overview:
+          type: string
+          maxLength: 200
+        like:
+          type: integer
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required: [title, overview]
+    RoadmapParent:
+      allOf:
+        - $ref: '#/components/schemas/RoadmapParentList'
+        - type: object
+          properties:
+            roadmap:
+              type: array
+              items:
+                $ref: '#/components/schemas/Roadmap'
+    RoadmapCreate:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        overview:
+          type: string
+          maxLength: 200
+        like:
+          type: integer
+          default: 0
+        roadmap:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              detail:
+                type: string
+              next_id:
+                type: string
+                format: uuid
+                nullable: true
+            required: [title]
+      required: [title, overview, roadmap]
+paths:
+  /api/v1/roadmaps/:
+    get:
+      summary: List roadmap parents
+      tags: [Roadmaps]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoadmapParentList'
+    post:
+      summary: Create roadmap parent with nested children
+      tags: [Roadmaps]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoadmapCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadmapParent'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/roadmaps/{pk}:
+    parameters:
+      - name: pk
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Retrieve roadmap parent detail
+      tags: [Roadmaps]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadmapParent'
+        '404':
+          description: Not Found
+    put:
+      summary: Update roadmap parent (and children)
+      tags: [Roadmaps]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoadmapParent'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadmapParent'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+    delete:
+      summary: Delete roadmap parent
+      tags: [Roadmaps]
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /api/accounts/auth/register:
+    post:
+      summary: Register user and issue token
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [username, email, password]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+        '400':
+          description: Bad Request
+  /api/accounts/auth/login:
+    post:
+      summary: Login and issue token
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required: [username, password]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+        '400':
+          description: Bad Request
+  /api/accounts/auth/user:
+    get:
+      summary: Get current user
+      tags: [Accounts]
+      security:
+        - TokenAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+  /api/accounts/auth/logout:
+    post:
+      summary: Logout (invalidate token)
+      tags: [Accounts]
+      security:
+        - TokenAuth: []
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
