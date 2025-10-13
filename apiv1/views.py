@@ -5,10 +5,22 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from roadmap.models import Roadmap, RoadmapParent
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from .serializers import RoadmapSerializer, RoadmapParentSerializer, RoadmapParentListSerializer
 
 
 class RoadmapParentView(APIView):
+    @extend_schema(
+        tags=["roadmaps"],
+        request=RoadmapParentSerializer,
+        responses={
+            200: RoadmapParentListSerializer(many=True),
+            201: RoadmapParentSerializer,
+            400: OpenApiResponse(description="Validation error"),
+        },
+        summary="ロードマップ親の一覧取得・作成",
+        description="GETでロードマップ親一覧、POSTで親+子ロードマップを作成します。",
+    )
     
     def get(self, request, format=None):
         """ロードマップのリストを取得"""
@@ -27,6 +39,17 @@ class RoadmapParentView(APIView):
         
 class RoadmapDetail(APIView):
     """ロードマップ全体を取得、修正、削除"""
+    @extend_schema(
+        tags=["roadmaps"],
+        parameters=[
+            OpenApiParameter("pk", str, description="親ロードマップUUID"),
+        ],
+        responses={
+            200: RoadmapParentSerializer,
+            204: OpenApiResponse(description="Deleted"),
+            404: OpenApiResponse(description="Not Found"),
+        },
+    )
     def get_object(self, pk):
         """parent_idがpkのものをすべて取得"""
         try:
@@ -39,6 +62,12 @@ class RoadmapDetail(APIView):
         serializer = RoadmapParentSerializer(roadmap)
         return Response(serializer.data)
     
+    @extend_schema(
+        tags=["roadmaps"],
+        request=RoadmapParentSerializer,
+        parameters=[OpenApiParameter("pk", str, description="親ロードマップUUID")],
+        responses={200: RoadmapParentSerializer, 400: OpenApiResponse(description="Validation error")} ,
+    )
     def put(self, request, pk, format=None):
         """roadmapのidを必ず指定する"""
         roadmap = self.get_object(pk)
@@ -48,6 +77,11 @@ class RoadmapDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @extend_schema(
+        tags=["roadmaps"],
+        parameters=[OpenApiParameter("pk", str, description="親ロードマップUUID")],
+        responses={204: OpenApiResponse(description="Deleted")},
+    )
     def delete(self, request, pk, format=None):
         roadmap = self.get_object(pk)
         roadmap.delete()

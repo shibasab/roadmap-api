@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'knox',
+    'drf_spectacular',
     
     # My applications
     'apiv1.apps.Apiv1Config',
@@ -62,14 +63,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASS': (
-        "knox.auth.TokenAuthentication",
-    )
-}
-
 
 ROOT_URLCONF = 'roadmap_api.urls'
 
@@ -153,10 +146,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # REST Framework
+# 統一設定: 認証とスキーマ自動生成を有効化
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
+        'knox.auth.TokenAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# drf-spectacular 設定
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Roadmap API',
+    'DESCRIPTION': 'Roadmap/Account エンドポイントのOpenAPIスキーマ',
+    'VERSION': '1.0.0',
+    # 必要に応じてサーバURLやコンポーネント拡張を追加可能
 }
 
 CORS_ORIGIN_ALLOW_ALL = False
