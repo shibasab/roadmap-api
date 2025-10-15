@@ -1,5 +1,6 @@
 from django.urls import path, include
 from .views import RegisterAPIView, LoginAPIView, UserAPIView
+from drf_spectacular.utils import extend_schema
 from knox import views as knox_views
 
 app_name = 'accounts'

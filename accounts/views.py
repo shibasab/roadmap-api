@@ -1,12 +1,19 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, AuthTokenResponseSerializer
+from drf_spectacular.utils import extend_schema
 
 
 # ユーザ登録API
 class RegisterAPIView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
+    @extend_schema(
+        tags=["auth"],
+        request=RegisterSerializer,
+        responses={200: AuthTokenResponseSerializer},
+        summary="ユーザ登録",
+    )
     
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -26,6 +33,12 @@ class RegisterAPIView(generics.GenericAPIView):
 # ログインAPI
 class LoginAPIView(generics.GenericAPIView):
     serializer_class = LoginSerializer
+    @extend_schema(
+        tags=["auth"],
+        request=LoginSerializer,
+        responses={200: AuthTokenResponseSerializer},
+        summary="ログイン",
+    )
     
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -48,6 +61,7 @@ class UserAPIView(generics.RetrieveAPIView):
         permissions.IsAuthenticated,
     ]
     serializer_class = UserSerializer
+    @extend_schema(tags=["auth"], summary="ログインユーザ取得", responses={200: UserSerializer})
     
     def get_object(self):
         return self.request.user

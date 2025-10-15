@@ -40,3 +40,11 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Incorrect Credentials")
+
+
+class AuthTokenResponseSerializer(serializers.Serializer):
+    """共通のレスポンス: 認証系で返すuser+token。
+    drf-spectacularのスキーマ定義用に使用。
+    """
+    user = UserSerializer()
+    token = serializers.CharField()
