@@ -1,28 +1,25 @@
 -i https://pypi.org/simple/
-certifi==2020.6.20
-cffi==1.14.3
-chardet==3.0.4
-cryptography==3.2
-dj-database-url==0.5.0
-django-cors-headers==3.2.0
-django-heroku==0.3.1
-django-rest-knox==4.1.0
-django-templated-mail==1.1.1
-django==2.2.10
-djangorestframework-jwt==1.11.0
-djangorestframework-simplejwt==4.4.0
-djangorestframework==3.10.3
-djoser==2.0.3
-drf-writable-nested==0.5.3
+# Django 5.0系
+django>=5.0,<6.0
+djangorestframework>=3.15.0
+django-cors-headers>=4.3.0
+django-rest-knox>=4.2.0
+
+# 認証関連
+djangorestframework-simplejwt>=5.3.0
+djoser>=2.2.0
+
+# データベース
+psycopg2>=2.9.0
+dj-database-url>=2.1.0
+
+# API関連
+drf-writable-nested>=0.7.0
 drf-spectacular
-gunicorn==20.0.4
-idna==2.8
-psycopg2==2.8.4
-pycparser==2.20
-pyjwt==1.7.1
-pytz==2020.1
-requests==2.22.0
-six==1.15.0
-sqlparse==0.4.1
-urllib3==1.25.11
-whitenoise==5.0
+
+# サーバー・デプロイ
+gunicorn>=21.2.0
+whitenoise>=6.6.0
+
+# その他
+requests>=2.31.0
